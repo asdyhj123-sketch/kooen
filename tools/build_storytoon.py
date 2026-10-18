@@ -52,7 +52,8 @@ def badge(draw: ImageDraw.ImageDraw, text: str) -> None:
 def render_card(base: Path, card: dict, out: Path) -> Image.Image:
     img = Image.open(base).convert("RGB").resize((W, H), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(img)
-    badge(draw, card.get("badge", "사연툰"))
+    if card.get("badge"):
+        badge(draw, card["badge"])
 
     y = int(card.get("title_y", 145))
     size = int(card.get("font_size", 72))
