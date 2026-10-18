@@ -1,0 +1,68 @@
+{
+  "story_id": "STORY-001",
+  "publish_date": "2026-10-20",
+  "video": "03_reel/STORY-001_앞지퍼형-스포츠브라.mp4",
+  "cards": [
+    {
+      "source": "01_source/01_사연도착.png",
+      "output": "02_cards/01_표지.png",
+      "badge": "사연툰 01",
+      "lines": ["띠링~", "사연 도착!"],
+      "accent_lines": [0],
+      "title_y": 155,
+      "font_size": 88,
+      "line_gap": 8,
+      "duration": 1.8,
+      "bottom_prompt": "큰컵 언니들의 사연함",
+      "prompt_y": 1510,
+      "prompt_size": 36
+    },
+    {
+      "source": "01_source/02_운동시작.png",
+      "output": "02_cards/02_운동시작.png",
+      "badge": "사연툰 01",
+      "lines": ["앞지퍼 스포츠브라 입고", "운동하던 그날"],
+      "accent_lines": [],
+      "title_y": 165,
+      "font_size": 68,
+      "line_gap": 14,
+      "duration": 1.9
+    },
+    {
+      "source": "01_source/03_지퍼하강.png",
+      "output": "02_cards/03_지퍼가팍.png",
+      "badge": "사연툰 01",
+      "lines": ["그런데 갑자기", "지퍼가 팍—!"],
+      "accent_lines": [1],
+      "title_y": 165,
+      "font_size": 76,
+      "line_gap": 8,
+      "duration": 1.8
+    },
+    {
+      "source": "01_source/04_천만다행.png",
+      "output": "02_cards/04_해방역사.png",
+      "badge": "사연툰 01",
+      "lines": ["겉옷 입어서 천만다행...", "그날, 제 가슴 해방 역사가", "새로 쓰였습니다"],
+      "accent_lines": [2],
+      "title_y": 140,
+      "font_size": 58,
+      "line_gap": 10,
+      "duration": 2.5
+    },
+    {
+      "source": "01_source/05_제품시사점.png",
+      "output": "02_cards/05_잠금안정성.png",
+      "badge": "사연툰 01",
+      "lines": ["큰컵 스포츠브라,", "편하게 입는 것만큼", "잠금 안정성도 중요해요"],
+      "accent_lines": [2],
+      "title_y": 125,
+      "font_size": 61,
+      "line_gap": 8,
+      "duration": 2.6,
+      "bottom_prompt": "앞지퍼형에서 뭘 먼저 보나요?",
+      "prompt_y": 1510,
+      "prompt_size": 32
+    }
+  ]
+}

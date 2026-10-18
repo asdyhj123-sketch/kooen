@@ -14,6 +14,7 @@ Codex가 자동으로 읽을 자료:
 - `reference/source/`: 로고, 캐릭터, 상품 원본
 - `archive/plans/`: 이전 주간 기획
 - `archive/posts/`: Apify 내보내기 또는 게시 기록
+- `archive/stories/`: 접수한 사연 원문, 각색본, 제품 시사점
 - `output/`: 이미 만든 결과물
 
 ## 2. 분석
@@ -77,6 +78,8 @@ sources/
 ```
 
 `00_검수목록.md`에는 게시 순서, 미리보기, 캡션 경로, 자체 검수 결과, 사용자가 확인할 핵심만 적는다. 사용자는 이를 확인한 뒤 직접 Instagram에 업로드한다.
+
+사연툰은 `output/storytoon/YYYY-MM-DD/STORY-NNN_주제/` 아래에 원본, 최종 카드, 릴스, 캡션, 검수본을 나눠 보관한다. 상세 계층은 `docs/CONTENT_STRATEGY.md`를 따른다.
 
 ## 8. 수정
 
