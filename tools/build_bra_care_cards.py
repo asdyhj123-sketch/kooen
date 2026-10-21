@@ -12,11 +12,11 @@ CARDS = OUT / "02_cards"
 FONT = ROOT / "assets" / "fonts" / "Jua-Regular.ttf"
 
 IMAGES = [
-    Path("/workspace/generated_images/exec-cbadd04a-640a-4a96-b951-3d013e9ba898.png"),
+    Path("/workspace/generated_images/exec-b225b76f-28b6-4dcb-ba68-53ba672738e2.png"),
     Path("/workspace/generated_images/exec-2ee84c56-05c2-47ea-83dd-c01957cef04c.png"),
     Path("/workspace/generated_images/exec-a5e73260-d19d-43f9-b0c3-54e4a0d89be2.png"),
-    Path("/workspace/generated_images/exec-d2fad506-9cc4-44ff-9eab-8fc23e5e5c1b.png"),
-    Path("/workspace/generated_images/exec-adb41417-dc46-44fa-9413-72e232c6a3b1.png"),
+    Path("/workspace/generated_images/exec-303b453b-922b-49b9-b612-794b99719d1c.png"),
+    Path("/workspace/generated_images/exec-9dd08a55-cd07-4c0d-8e3e-cb9fdc66cd3b.png"),
     Path("/workspace/generated_images/exec-28c4fb28-5b6d-464d-a9a4-2966e7c4ae3c.png"),
 ]
 
@@ -37,15 +37,6 @@ def centered(draw, text, y, fnt, fill=BLACK, x0=45, x1=896, stroke=0, stroke_fil
               stroke_fill=stroke_fill or fill)
 
 
-def pill(draw, text, y):
-    fnt = font(38)
-    box = draw.textbbox((0, 0), text, font=fnt)
-    w = box[2] - box[0] + 50
-    x = (941 - w) / 2
-    draw.rounded_rectangle((x, y, x + w, y + 58), radius=29, fill="#FCE1E2")
-    centered(draw, text, y + 7, fnt, DEEP_PINK)
-
-
 def cover(im):
     d = ImageDraw.Draw(im)
     f = font(67)
@@ -63,20 +54,20 @@ def cover(im):
     nbox = d.textbbox((0, 0), number, font=font(69))
     d.text((cx + (circle - (nbox[2]-nbox[0]))/2, 148), number, font=font(69), fill=BLACK)
     d.text((cx + circle + gap, 150), right, font=f, fill=BLACK)
-    centered(d, "브라 오래 입으려면", 900, font(48), WHITE, x0=440, x1=890)
-    centered(d, "이 5가지는 피해주세요", 968, font(45), WHITE, x0=435, x1=895)
+    centered(d, "브라 오래 입으려면", 875, font(39), WHITE, x0=525, x1=900)
+    centered(d, "이 5가지는", 935, font(39), WHITE, x0=525, x1=900)
+    centered(d, "피해주세요", 995, font(39), WHITE, x0=525, x1=900)
 
 
 def standard(im, idx, title, sub, note=None, footer=None):
     d = ImageDraw.Draw(im)
-    pill(d, f"관리 습관 {idx}", 110)
     size = 64
     while size > 42 and d.textbbox((0, 0), title, font=font(size))[2] > 850:
         size -= 2
-    centered(d, title, 205, font(size), BLACK)
-    centered(d, sub, 315, font(40), DEEP_PINK)
+    centered(d, title, 145, font(size), BLACK)
+    centered(d, sub, 255, font(40), DEEP_PINK)
     if note:
-        centered(d, note, 380, font(31), BLACK)
+        centered(d, note, 320, font(31), BLACK)
     if footer:
         box = (65, 1515, 876, 1600)
         d.rounded_rectangle(box, radius=30, fill="#FFF1F1")
@@ -108,6 +99,7 @@ def main():
         cards.append(im)
 
     for i, im in enumerate(cards, 1):
+        im = im.resize((1080, 1920), Image.Resampling.LANCZOS)
         im.save(CARDS / f"{i:02d}.png", quality=95)
 
 
