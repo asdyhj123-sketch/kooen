@@ -30,48 +30,59 @@ def font(size: int):
     return ImageFont.truetype(str(FONT), size)
 
 
-def centered(draw, text, y, fnt, fill=BLACK, x0=45, x1=896, stroke=0, stroke_fill=None):
+def centered(draw, text, y, fnt, fill=BLACK, x0=90, x1=851, stroke=2, stroke_fill=None):
     box = draw.textbbox((0, 0), text, font=fnt, stroke_width=stroke)
     x = (x0 + x1 - (box[2] - box[0])) / 2
     draw.text((x, y), text, font=fnt, fill=fill, stroke_width=stroke,
               stroke_fill=stroke_fill or fill)
 
 
+def safe_margin(im, scale=0.88):
+    w, h = im.size
+    resized = im.resize((round(w * scale), round(h * scale)), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGB", (w, h), WHITE)
+    canvas.paste(resized, ((w - resized.width) // 2, (h - resized.height) // 2))
+    return canvas
+
+
 def cover(im):
     d = ImageDraw.Draw(im)
     f = font(67)
-    left, number, right = "브라사전", "6", "브라 관리법"
+    left, number = "브라사전", "8"
     gap = 18
     lbox = d.textbbox((0, 0), left, font=f)
-    rbox = d.textbbox((0, 0), right, font=f)
-    lw, rw = lbox[2] - lbox[0], rbox[2] - rbox[0]
+    lw = lbox[2] - lbox[0]
     circle = 92
-    total = lw + gap + circle + gap + rw
+    total = lw + gap + circle
     x = (941 - total) / 2
-    d.text((x, 150), left, font=f, fill=BLACK)
+    d.text((x, 105), left, font=f, fill=BLACK, stroke_width=3, stroke_fill=BLACK)
     cx = x + lw + gap
-    d.ellipse((cx, 141, cx + circle, 233), fill=PINK, outline=BLACK, width=3)
+    d.ellipse((cx, 96, cx + circle, 188), fill=PINK, outline=BLACK, width=3)
     nbox = d.textbbox((0, 0), number, font=font(69))
-    d.text((cx + (circle - (nbox[2]-nbox[0]))/2, 148), number, font=font(69), fill=BLACK)
-    d.text((cx + circle + gap, 150), right, font=f, fill=BLACK)
-    centered(d, "브라 오래 입으려면", 875, font(39), WHITE, x0=525, x1=900)
-    centered(d, "이 5가지는", 935, font(39), WHITE, x0=525, x1=900)
-    centered(d, "피해주세요", 995, font(39), WHITE, x0=525, x1=900)
+    d.text((cx + (circle - (nbox[2]-nbox[0]))/2, 103), number, font=font(69),
+           fill=BLACK, stroke_width=3, stroke_fill=BLACK)
+    centered(d, "브라 관리법", 205, font(67), BLACK, stroke=3)
+    centered(d, "브라 수명을", 925, font(35), WHITE, x0=585, x1=850, stroke=1)
+    centered(d, "줄이는 관리 습관", 980, font(31), WHITE, x0=585, x1=850, stroke=1)
+    centered(d, "5가지", 1040, font(40), WHITE, x0=585, x1=850, stroke=1)
 
 
 def standard(im, idx, title, sub, note=None, footer=None):
     d = ImageDraw.Draw(im)
     size = 64
-    while size > 42 and d.textbbox((0, 0), title, font=font(size))[2] > 850:
+    while size > 42 and d.textbbox((0, 0), title, font=font(size), stroke_width=3)[2] > 741:
         size -= 2
-    centered(d, title, 145, font(size), BLACK)
-    centered(d, sub, 255, font(40), DEEP_PINK)
+    centered(d, title, 145, font(size), BLACK, stroke=3)
+    sub_size = 40
+    while sub_size > 30 and d.textbbox((0, 0), sub, font=font(sub_size), stroke_width=2)[2] > 741:
+        sub_size -= 2
+    centered(d, sub, 255, font(sub_size), DEEP_PINK, stroke=2, stroke_fill=DEEP_PINK)
     if note:
-        centered(d, note, 320, font(31), BLACK)
+        centered(d, note, 320, font(31), BLACK, stroke=2)
     if footer:
         box = (65, 1515, 876, 1600)
         d.rounded_rectangle(box, radius=30, fill="#FFF1F1")
-        centered(d, footer, 1534, font(31), BLACK, x0=75, x1=866)
+        centered(d, footer, 1534, font(31), BLACK, x0=100, x1=841, stroke=2)
 
 
 def main():
@@ -81,7 +92,7 @@ def main():
         copy2(src, SRC / f"{i:02d}_base.png")
 
     cards = []
-    im = Image.open(IMAGES[0]).convert("RGB")
+    im = safe_margin(Image.open(IMAGES[0]).convert("RGB"))
     cover(im)
     cards.append(im)
 
@@ -94,7 +105,7 @@ def main():
          "소재마다 달라요. 제품 케어라벨이 가장 먼저!"),
     ]
     for src, spec in zip(IMAGES[1:], specs):
-        im = Image.open(src).convert("RGB")
+        im = safe_margin(Image.open(src).convert("RGB"))
         standard(im, *spec)
         cards.append(im)
 
