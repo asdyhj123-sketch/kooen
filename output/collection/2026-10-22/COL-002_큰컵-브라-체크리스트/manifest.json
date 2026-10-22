@@ -8,7 +8,7 @@
   "codec": "h264",
   "pixel_format": "yuv420p",
   "audio": false,
-  "transition": "0.167초 페이드",
+  "transition": "하드컷 (전환 효과 없음)",
   "duration_seconds": 12.9,
   "cards": [
     {
@@ -25,9 +25,9 @@
     },
     {
       "order": 3,
-      "file": "03_꼭확인3_와이어.png",
+      "file": "03_꼭확인2_와이어.png",
       "seconds": 2.0,
-      "label": "꼭 확인 ③ 와이어"
+      "label": "꼭 확인 ② 와이어"
     },
     {
       "order": 4,
