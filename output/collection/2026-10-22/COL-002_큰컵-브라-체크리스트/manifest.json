@@ -1,0 +1,57 @@
+{
+  "id": "COL-002",
+  "date": "2026-10-22",
+  "title": "큰컵 브라 체크리스트",
+  "format": "Instagram Reel",
+  "canvas": "1080x1920",
+  "fps": 30,
+  "codec": "h264",
+  "pixel_format": "yuv420p",
+  "audio": false,
+  "transition": "0.167초 페이드",
+  "duration_seconds": 12.9,
+  "cards": [
+    {
+      "order": 1,
+      "file": "01_표지.png",
+      "seconds": 1.5,
+      "label": "표지"
+    },
+    {
+      "order": 2,
+      "file": "02_꼭확인1_밑단.png",
+      "seconds": 2.0,
+      "label": "꼭 확인 ① 밑단"
+    },
+    {
+      "order": 3,
+      "file": "03_꼭확인3_와이어.png",
+      "seconds": 2.0,
+      "label": "꼭 확인 ③ 와이어"
+    },
+    {
+      "order": 4,
+      "file": "04_하지마세요1_평소사이즈.png",
+      "seconds": 1.7,
+      "label": "하지 마세요 ① 평소 사이즈"
+    },
+    {
+      "order": 5,
+      "file": "05_하지마세요2_어깨끈.png",
+      "seconds": 1.7,
+      "label": "하지 마세요 ② 어깨끈"
+    },
+    {
+      "order": 6,
+      "file": "06_하지마세요3_자매사이즈.png",
+      "seconds": 1.9,
+      "label": "하지 마세요 ③ 자매사이즈"
+    },
+    {
+      "order": 7,
+      "file": "07_마지막_저장유도.png",
+      "seconds": 2.1,
+      "label": "저장 유도"
+    }
+  ]
+}
