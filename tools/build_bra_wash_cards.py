@@ -71,16 +71,34 @@ def add_text(src_name: str, out_name: str, badge: str | None, title: str, subtit
 def cover():
     im = Image.open(SRC / "01_base.png").convert("RGB").resize((941, 1672), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(im)
-    centered(draw, "브라사전", 58, font(58))
-    cx, cy, r = 638, 93, 52
-    draw.ellipse((cx-r, cy-r, cx+r, cy+r), fill=PALE_PINK)
-    box = draw.textbbox((0, 0), "9", font=font(68))
-    draw.text(
-        (cx-(box[2]-box[0])/2, cy-(box[3]-box[1])/2-5), "9",
-        font=font(68), fill=BLACK, stroke_width=1, stroke_fill=BLACK,
+    title_font = font(58)
+    number_font = font(70)
+    left = "브라사전"
+    right = "올바른 브라 세탁법"
+    left_box = draw.textbbox((0, 0), left, font=title_font, stroke_width=1)
+    right_box = draw.textbbox((0, 0), right, font=title_font, stroke_width=1)
+    left_w = left_box[2] - left_box[0]
+    right_w = right_box[2] - right_box[0]
+    diameter = 92
+    gap = 12
+    total_w = left_w + gap + diameter + gap + right_w
+    x = (941 - total_w) / 2
+    y = 255
+    draw.text((x, y), left, font=title_font, fill=BLACK, stroke_width=1, stroke_fill=BLACK)
+    circle_x = x + left_w + gap
+    circle_y = y - 10
+    draw.ellipse(
+        (circle_x, circle_y, circle_x + diameter, circle_y + diameter),
+        fill="#F7B8B8", outline=BLACK, width=5,
     )
-    centered(draw, "올바른 브라", 170, font(103), BLACK)
-    highlighted(draw, "세탁 방법", 285, font(103))
+    nbox = draw.textbbox((0, 0), "9", font=number_font, stroke_width=1)
+    nw, nh = nbox[2] - nbox[0], nbox[3] - nbox[1]
+    draw.text(
+        (circle_x + (diameter - nw) / 2, circle_y + (diameter - nh) / 2 - 6), "9",
+        font=number_font, fill=BLACK, stroke_width=1, stroke_fill=BLACK,
+    )
+    right_x = circle_x + diameter + gap
+    draw.text((right_x, y), right, font=title_font, fill=BLACK, stroke_width=1, stroke_fill=BLACK)
     im.save(OUT / "01_표지.png", quality=100)
 
 
