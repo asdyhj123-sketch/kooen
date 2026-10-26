@@ -1,0 +1,40 @@
+{
+  "id": "COL-003",
+  "date": "2026-10-26",
+  "title": "올바른 브라 세탁 방법",
+  "series": "브라사전 9",
+  "status": "image_review",
+  "canvas": "941x1672",
+  "reel_created": false,
+  "cards": [
+    {
+      "order": 1,
+      "file": "01_표지.png"
+    },
+    {
+      "order": 2,
+      "file": "02_기본원칙.png"
+    },
+    {
+      "order": 3,
+      "file": "03_손세탁1_중성세제.png"
+    },
+    {
+      "order": 4,
+      "file": "04_손세탁2_눌러세탁.png"
+    },
+    {
+      "order": 5,
+      "file": "05_세탁기사용시.png"
+    },
+    {
+      "order": 6,
+      "file": "06_건조시.png"
+    },
+    {
+      "order": 7,
+      "file": "07_저장유도.png"
+    }
+  ],
+  "core_rule": "케어라벨을 우선하며 되도록 손세탁을 권장한다. 세탁기 사용 시 라벨 허용 여부를 확인한다."
+}
