@@ -23,12 +23,20 @@ def centered(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK, spac
 
 
 def pill(draw: ImageDraw.ImageDraw, text: str, y: int, fnt=None):
-    fnt = fnt or font(53)
+    fnt = fnt or font(58)
     box = draw.textbbox((0, 0), text, font=fnt)
     w, h = box[2] - box[0], box[3] - box[1]
     x = (941 - w) / 2
     draw.rounded_rectangle((x - 28, y - 10, x + w + 28, y + h + 15), radius=30, fill=PALE_PINK)
     draw.text((x, y), text, font=fnt, fill=BLACK)
+
+
+def highlighted(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK):
+    box = draw.textbbox((0, 0), text, font=fnt)
+    w, h = box[2] - box[0], box[3] - box[1]
+    x = (941 - w) / 2
+    draw.rounded_rectangle((x - 22, y + 4, x + w + 22, y + h + 11), radius=24, fill=PALE_PINK)
+    draw.text((x, y), text, font=fnt, fill=fill)
 
 
 def add_text(src_name: str, out_name: str, badge: str | None, title: str, subtitle: str = "", title_size=78):
@@ -45,7 +53,13 @@ def add_text(src_name: str, out_name: str, badge: str | None, title: str, subtit
         title_box = draw.multiline_textbbox((0, 0), title, font=font(title_size), spacing=10, align="center")
         title_h = title_box[3] - title_box[1]
         sub_y = title_y + title_h + 30
-        centered(draw, subtitle, sub_y, font(45), PINK, 8)
+        lines = subtitle.split("\n")
+        sub_font = font(45)
+        if len(lines) == 1:
+            highlighted(draw, lines[0], sub_y, sub_font)
+        else:
+            centered(draw, lines[0], sub_y, sub_font, BLACK)
+            highlighted(draw, lines[1], sub_y + 56, sub_font)
     im.save(OUT / out_name, quality=100)
 
 
@@ -57,14 +71,15 @@ def cover():
     draw.ellipse((cx-r, cy-r, cx+r, cy+r), fill=PALE_PINK)
     box = draw.textbbox((0, 0), "9", font=font(68))
     draw.text((cx-(box[2]-box[0])/2, cy-(box[3]-box[1])/2-5), "9", font=font(68), fill=BLACK)
-    centered(draw, "올바른 브라\n세탁 방법", 170, font(103), BLACK, 6)
+    centered(draw, "올바른 브라", 170, font(103), BLACK)
+    highlighted(draw, "세탁 방법", 285, font(103))
     im.save(OUT / "01_표지.png", quality=100)
 
 
 def closing():
     im = Image.open(SRC / "07_base.png").convert("RGB").resize((941, 1672), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(im)
-    centered(draw, "큰컵언니들", 55, font(57), BLACK)
+    highlighted(draw, "큰컵언니들", 55, font(57), BLACK)
     centered(draw, "되도록 손세탁하고", 145, font(79), BLACK)
     centered(draw, "세탁기를 쓸 때는", 250, font(83), PINK)
     centered(draw, "라벨과 세탁망 확인!", 355, font(76), BLACK)
