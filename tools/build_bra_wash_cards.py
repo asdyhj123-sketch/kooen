@@ -19,10 +19,8 @@ def font(size: int) -> ImageFont.FreeTypeFont:
 def centered(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK, spacing=8):
     box = draw.multiline_textbbox((0, 0), text, font=fnt, spacing=spacing, align="center")
     w = box[2] - box[0]
-    stroke = 2 if getattr(fnt, "size", 0) >= 70 else 1
     draw.multiline_text(
         ((941 - w) / 2, y), text, font=fnt, fill=fill, spacing=spacing, align="center",
-        stroke_width=stroke, stroke_fill=fill,
     )
 
 
@@ -32,7 +30,7 @@ def pill(draw: ImageDraw.ImageDraw, text: str, y: int, fnt=None):
     w, h = box[2] - box[0], box[3] - box[1]
     x = (941 - w) / 2
     draw.rounded_rectangle((x - 28, y - 10, x + w + 28, y + h + 15), radius=30, fill=PALE_PINK)
-    draw.text((x, y), text, font=fnt, fill=BLACK, stroke_width=1, stroke_fill=BLACK)
+    draw.text((x, y), text, font=fnt, fill=BLACK)
 
 
 def highlighted(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK):
@@ -40,8 +38,7 @@ def highlighted(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK):
     w, h = box[2] - box[0], box[3] - box[1]
     x = (941 - w) / 2
     draw.rounded_rectangle((x - 22, y + 4, x + w + 22, y + h + 11), radius=24, fill=PALE_PINK)
-    stroke = 2 if getattr(fnt, "size", 0) >= 70 else 1
-    draw.text((x, y), text, font=fnt, fill=fill, stroke_width=stroke, stroke_fill=fill)
+    draw.text((x, y), text, font=fnt, fill=fill)
 
 
 def add_text(src_name: str, out_name: str, badge: str | None, title: str, subtitle: str = "", title_size=78):
