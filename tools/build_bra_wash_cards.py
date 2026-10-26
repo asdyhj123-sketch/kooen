@@ -19,7 +19,11 @@ def font(size: int) -> ImageFont.FreeTypeFont:
 def centered(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK, spacing=8):
     box = draw.multiline_textbbox((0, 0), text, font=fnt, spacing=spacing, align="center")
     w = box[2] - box[0]
-    draw.multiline_text(((941 - w) / 2, y), text, font=fnt, fill=fill, spacing=spacing, align="center")
+    stroke = 2 if getattr(fnt, "size", 0) >= 70 else 1
+    draw.multiline_text(
+        ((941 - w) / 2, y), text, font=fnt, fill=fill, spacing=spacing, align="center",
+        stroke_width=stroke, stroke_fill=fill,
+    )
 
 
 def pill(draw: ImageDraw.ImageDraw, text: str, y: int, fnt=None):
@@ -28,7 +32,7 @@ def pill(draw: ImageDraw.ImageDraw, text: str, y: int, fnt=None):
     w, h = box[2] - box[0], box[3] - box[1]
     x = (941 - w) / 2
     draw.rounded_rectangle((x - 28, y - 10, x + w + 28, y + h + 15), radius=30, fill=PALE_PINK)
-    draw.text((x, y), text, font=fnt, fill=BLACK)
+    draw.text((x, y), text, font=fnt, fill=BLACK, stroke_width=1, stroke_fill=BLACK)
 
 
 def highlighted(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK):
@@ -36,7 +40,8 @@ def highlighted(draw: ImageDraw.ImageDraw, text: str, y: int, fnt, fill=BLACK):
     w, h = box[2] - box[0], box[3] - box[1]
     x = (941 - w) / 2
     draw.rounded_rectangle((x - 22, y + 4, x + w + 22, y + h + 11), radius=24, fill=PALE_PINK)
-    draw.text((x, y), text, font=fnt, fill=fill)
+    stroke = 2 if getattr(fnt, "size", 0) >= 70 else 1
+    draw.text((x, y), text, font=fnt, fill=fill, stroke_width=stroke, stroke_fill=fill)
 
 
 def add_text(src_name: str, out_name: str, badge: str | None, title: str, subtitle: str = "", title_size=78):
@@ -70,7 +75,10 @@ def cover():
     cx, cy, r = 638, 93, 52
     draw.ellipse((cx-r, cy-r, cx+r, cy+r), fill=PALE_PINK)
     box = draw.textbbox((0, 0), "9", font=font(68))
-    draw.text((cx-(box[2]-box[0])/2, cy-(box[3]-box[1])/2-5), "9", font=font(68), fill=BLACK)
+    draw.text(
+        (cx-(box[2]-box[0])/2, cy-(box[3]-box[1])/2-5), "9",
+        font=font(68), fill=BLACK, stroke_width=1, stroke_fill=BLACK,
+    )
     centered(draw, "올바른 브라", 170, font(103), BLACK)
     highlighted(draw, "세탁 방법", 285, font(103))
     im.save(OUT / "01_표지.png", quality=100)
