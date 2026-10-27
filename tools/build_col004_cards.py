@@ -20,7 +20,7 @@ CARD_TEXT = {
     "01_표지.png": "가슴 크면 공감하는\n순간들 4탄",
     "02_안전벨트.png": "안전벨트 위치가\n자꾸 애매해질 때",
     "03_크로스백.png": "크로스백 끈이 가슴 정가운데에\n껴서 안 나올 때",
-    "04_프린트티.png": "프린트 그림이 입으면\n쭉 늘어날 때",
+    "04_프린트티.png": "프린트 그림이 가슴 부분만\n쭉 늘어날 때",
     "05_원피스허리선.png": "원피스 허리선이\n가슴 아래까지 올라올 때",
     "06_작은내장캡.png": "내장캡 옷의 컵이\n너무 작을 때",
     "07_마무리.png": "큰컵언니들은 어떤 순간이\n제일 공감돼요?",
@@ -78,7 +78,7 @@ def build_card(name: str, heading: str):
         draw_label(draw, "가슴 아래 허리선", (825, 1055), CORAL, CORAL)
         draw_label(draw, "원래 허리선", (780, 1275), GRAY, "#A8A8A8")
 
-    image.save(CARDS / name, format="PNG", optimize=True)
+    image.save(CARDS / name, format="PNG", compress_level=6)
 
 
 def main():
