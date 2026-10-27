@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 
 ROOT = Path("output/collection/2026-10-27/COL-004_가슴크면-공감하는-순간들-4")
@@ -26,6 +26,14 @@ CARD_TEXT = {
     "06_작은내장캡.png": "내장캡 옷의 컵이\n너무 작을 때",
     "07_마무리.png": "큰컵언니들은 어떤 순간이\n제일 공감돼요?",
 }
+
+ACTIVE_CARDS = [
+    ("02_안전벨트.png", "01_안전벨트.png"),
+    ("03_크로스백.png", "02_크로스백.png"),
+    ("04_프린트티.png", "03_프린트티.png"),
+    ("05_원피스허리선.png", "04_원피스허리선.png"),
+    ("06_작은내장캡.png", "05_작은내장캡.png"),
+]
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -70,23 +78,56 @@ def draw_label(draw: ImageDraw.ImageDraw, text: str, center, fill, outline):
     draw.text((x, y), text, font=fnt, fill=fill)
 
 
-def build_card(name: str, heading: str):
-    image = Image.open(SOURCE / name).convert("RGB").resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
+def content_bbox(image: Image.Image):
+    background = Image.new("RGB", image.size, "white")
+    difference = ImageChops.difference(image, background).convert("L")
+    mask = difference.point(lambda value: 255 if value > 10 else 0)
+    bbox = mask.getbbox()
+    if not bbox:
+        return (0, 0, image.width, image.height)
+    left, top, right, bottom = bbox
+    margin = 24
+    return (
+        max(0, left - margin),
+        max(0, top - margin),
+        min(image.width, right + margin),
+        min(image.height, bottom + margin),
+    )
+
+
+def draw_arrow(draw: ImageDraw.ImageDraw, start, end, fill=CORAL, width=6):
+    draw.line((start, end), fill=fill, width=width)
+    ex, ey = end
+    draw.polygon([(ex, ey), (ex - 13, ey - 24), (ex + 14, ey - 18)], fill=fill)
+
+
+def build_card(source_name: str, output_name: str):
+    source = Image.open(SOURCE / source_name).convert("RGB")
+
+    if source_name == "05_원피스허리선.png":
+        source_draw = ImageDraw.Draw(source)
+        draw_label(source_draw, "허리선", (755, 860), CORAL, CORAL)
+        draw_arrow(source_draw, (710, 905), (645, 1000), CORAL, 6)
+
+    crop = source.crop(content_bbox(source))
+    crop.thumbnail((980, 1370), Image.Resampling.LANCZOS)
+    image = Image.new("RGB", (WIDTH, HEIGHT), "white")
+    art_top = 430 + (1370 - crop.height) // 2
+    image.paste(crop, ((WIDTH - crop.width) // 2, art_top))
+
     if SHOW_TEXT:
         draw = ImageDraw.Draw(image)
-        draw_heading(draw, heading)
+        draw_heading(draw, CARD_TEXT[source_name])
 
-        if name == "05_원피스허리선.png":
-            draw_label(draw, "가슴 아래 허리선", (825, 1055), CORAL, CORAL)
-            draw_label(draw, "원래 허리선", (780, 1275), GRAY, "#A8A8A8")
-
-    image.save(CARDS / name, format="PNG", compress_level=6)
+    image.save(CARDS / output_name, format="PNG", compress_level=6)
 
 
 def main():
     CARDS.mkdir(parents=True, exist_ok=True)
-    for name, heading in CARD_TEXT.items():
-        build_card(name, heading)
+    for old_card in CARDS.glob("*.png"):
+        old_card.unlink()
+    for source_name, output_name in ACTIVE_CARDS:
+        build_card(source_name, output_name)
 
 
 if __name__ == "__main__":
