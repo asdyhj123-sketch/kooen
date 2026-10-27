@@ -14,6 +14,7 @@ BLACK = "#050505"
 CORAL = "#FF6F70"
 GRAY = "#777777"
 PALE_PINK = "#FFE0E0"
+SHOW_TEXT = False
 
 
 CARD_TEXT = {
@@ -71,12 +72,13 @@ def draw_label(draw: ImageDraw.ImageDraw, text: str, center, fill, outline):
 
 def build_card(name: str, heading: str):
     image = Image.open(SOURCE / name).convert("RGB").resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
-    draw = ImageDraw.Draw(image)
-    draw_heading(draw, heading)
+    if SHOW_TEXT:
+        draw = ImageDraw.Draw(image)
+        draw_heading(draw, heading)
 
-    if name == "05_원피스허리선.png":
-        draw_label(draw, "가슴 아래 허리선", (825, 1055), CORAL, CORAL)
-        draw_label(draw, "원래 허리선", (780, 1275), GRAY, "#A8A8A8")
+        if name == "05_원피스허리선.png":
+            draw_label(draw, "가슴 아래 허리선", (825, 1055), CORAL, CORAL)
+            draw_label(draw, "원래 허리선", (780, 1275), GRAY, "#A8A8A8")
 
     image.save(CARDS / name, format="PNG", compress_level=6)
 
