@@ -13,6 +13,7 @@ SOURCE = ROOT / "01_source"
 CARDS = ROOT / "02_cards"
 REVIEW = ROOT / "05_review"
 CAPTION = ROOT / "04_caption"
+DOWNLOADS = ROOT / "06_download"
 FONT_PATH = Path("assets/fonts/Jua-Regular.ttf")
 CUPBUNNY = Path("assets/cupbunny")
 BRA_PATH = Path("assets/bras/3분의4컵_투명.png")
@@ -458,8 +459,19 @@ def build_zip():
         archive.write(ROOT / "manifest.json", arcname="manifest.json")
 
 
+def build_individual_downloads():
+    DOWNLOADS.mkdir(parents=True, exist_ok=True)
+    for old_zip in DOWNLOADS.glob("*.zip"):
+        old_zip.unlink()
+    for item in CARDS_DATA:
+        card_path = CARDS / item["file"]
+        zip_path = DOWNLOADS / f"{card_path.stem}.zip"
+        with ZipFile(zip_path, "w", ZIP_DEFLATED) as archive:
+            archive.write(card_path, arcname=card_path.name)
+
+
 def main():
-    for directory in (SOURCE, CARDS, REVIEW, CAPTION):
+    for directory in (SOURCE, CARDS, REVIEW, CAPTION, DOWNLOADS):
         directory.mkdir(parents=True, exist_ok=True)
     for directory in (SOURCE, CARDS):
         for old in directory.glob("*.png"):
@@ -469,6 +481,7 @@ def main():
     write_metadata()
     build_review()
     build_zip()
+    build_individual_downloads()
 
 
 if __name__ == "__main__":
