@@ -176,26 +176,33 @@ def draw_bra_and_bunny(base: Image.Image, kind: str):
     bunny = Image.open(CUPBUNNY / "설명.png").convert("RGBA")
 
     if kind in {"wing", "sidebone"}:
-        paste_contain(base, bunny, (35, 790, 360, 1290))
-        # Stylized side view: cup + long wing + hooks.
-        draw.ellipse((380, 640, 650, 1010), fill="#F7DCCF", outline=DARK, width=7)
-        wing = [(600, 765), (945, 720), (980, 930), (620, 980)]
-        draw.polygon(wing, fill=PINK, outline=DARK)
-        draw.line((600, 765, 620, 980), fill=DARK, width=7)
-        for hx in (952, 972):
-            for hy in (765, 825, 885):
-                draw.ellipse((hx - 8, hy - 8, hx + 8, hy + 8), outline=DARK, width=4)
+        # Complete front bra with wide side wings and a visible hook end.
+        left_wing = [(310, 770), (92, 725), (72, 975), (345, 1030)]
+        right_wing = [(770, 770), (990, 725), (1010, 975), (735, 1030)]
+        draw.polygon(left_wing, fill="#F3D2C3", outline=DARK)
+        draw.polygon(right_wing, fill="#F3D2C3", outline=DARK)
+        for hy in (785, 850, 915):
+            draw.ellipse((982, hy - 9, 1000, hy + 9), outline=DARK, width=4)
+
+        full_bra = bra_asset(660)
+        paste_contain(base, full_bra, (210, 500, 880, 1160))
+
         if kind == "wing":
             overlay = Image.new("RGBA", base.size, (0, 0, 0, 0))
             od = ImageDraw.Draw(overlay)
-            od.polygon(wing, fill=(255, 116, 120, 90))
+            od.polygon(left_wing, fill=(255, 116, 120, 105))
+            od.polygon(right_wing, fill=(255, 116, 120, 105))
             base.alpha_composite(overlay)
-            draw.line((760, 680, 760, 1040), fill=CORAL, width=5)
-            draw.polygon([(760, 1040), (744, 1010), (776, 1010)], fill=CORAL)
+            draw = ImageDraw.Draw(base)
+            draw.line((175, 650, 190, 745), fill=CORAL, width=7)
+            draw.polygon([(190, 745), (171, 715), (203, 711)], fill=CORAL)
+            draw.line((905, 650, 890, 745), fill=CORAL, width=7)
+            draw.polygon([(890, 745), (877, 710), (909, 716)], fill=CORAL)
         else:
-            draw.rounded_rectangle((650, 730, 690, 965), radius=16, fill=CORAL, outline=DARK, width=5)
-            draw.line((670, 670, 670, 715), fill=CORAL, width=6)
-            draw.polygon([(670, 670), (655, 700), (685, 700)], fill=CORAL)
+            draw.rounded_rectangle((785, 765, 827, 1000), radius=16, fill=CORAL, outline=DARK, width=5)
+            draw.line((806, 690, 806, 748), fill=CORAL, width=7)
+            draw.polygon([(806, 748), (790, 716), (822, 716)], fill=CORAL)
+        paste_contain(base, bunny, (20, 1030, 300, 1360))
         return
 
     paste_contain(base, bunny, (25, 820, 335, 1300))
@@ -215,10 +222,7 @@ def draw_bra_and_bunny(base: Image.Image, kind: str):
     x, y, w, h = paste_contain(base, bra, (330, 505, 1040, 1235))
     diagram = ImageDraw.Draw(base)
 
-    if kind == "mold":
-        diagram.arc((x + 95, y + 240, x + w // 2 - 5, y + h - 70), 190, 350, fill=CORAL, width=7)
-        diagram.arc((x + w // 2 + 5, y + 240, x + w - 95, y + h - 70), 190, 350, fill=CORAL, width=7)
-    elif kind == "cutsew":
+    if kind == "cutsew":
         # Three-piece cup seam guides.
         for side in (0, 1):
             cx = x + int(w * (0.29 if side == 0 else 0.71))
