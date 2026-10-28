@@ -1,0 +1,59 @@
+{
+  "id": "COL-005",
+  "date": "2026-10-28",
+  "title": "브라사전 10 브라 상세페이지 용어 번역집",
+  "status": "cards_review_pending",
+  "reel_created": false,
+  "canvas": "1080x1920",
+  "card_count": 8,
+  "font": "Jua-Regular",
+  "cards": [
+    {
+      "order": 1,
+      "file": "01_표지.png",
+      "kind": "cover"
+    },
+    {
+      "order": 2,
+      "file": "02_몰드컵.png",
+      "kind": "mold"
+    },
+    {
+      "order": 3,
+      "file": "03_재단컵.png",
+      "kind": "cutsew"
+    },
+    {
+      "order": 4,
+      "file": "04_홑겹.png",
+      "kind": "unlined"
+    },
+    {
+      "order": 5,
+      "file": "05_중심고어.png",
+      "kind": "gore"
+    },
+    {
+      "order": 6,
+      "file": "06_옆날개.png",
+      "kind": "wing"
+    },
+    {
+      "order": 7,
+      "file": "07_사이드본.png",
+      "kind": "sidebone"
+    },
+    {
+      "order": 8,
+      "file": "08_저장CTA.png",
+      "kind": "cta"
+    }
+  ],
+  "notes": [
+    "몰드컵/재단컵/홑겹은 예시를 표기",
+    "중심고어/옆날개/사이드본은 위치를 표기",
+    "각 용어에 큰컵 POINT 한 줄 표기",
+    "마지막 컷은 저장 CTA와 하트만 사용",
+    "이미지 검수 후 릴스 제작"
+  ]
+}
