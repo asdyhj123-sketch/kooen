@@ -16,6 +16,7 @@ CAPTION = ROOT / "04_caption"
 FONT_PATH = Path("assets/fonts/Jua-Regular.ttf")
 CUPBUNNY = Path("assets/cupbunny")
 BRA_PATH = Path("assets/bras/3분의4컵_투명.png")
+OPEN_BRA_PATH = Path("assets/bras/브라_펼친형.png")
 PLAN_PATH = Path("output/planning/2026-10-28_브라사전10-상세페이지용어번역집.md")
 
 WIDTH = 1080
@@ -58,7 +59,6 @@ CARDS_DATA = [
         "definition": "패드 없이 원단만으로 만든 컵",
         "meta": "예: 레이스 홑겹 브라, 메시 홑겹 브라",
         "point": "볼륨을 더하지 않아 가볍지만\n원단과 절개선의 지지력을 함께 봐야 해요",
-        "detail": "레이스·메시 원단 자체가\n컵 모양을 만들어요",
         "footnote": "참고: 재단컵이면서 홑겹일 수도 있어요",
     },
     {
@@ -174,42 +174,58 @@ def tint_asset(asset: Image.Image, color: tuple[int, int, int], strength: float)
     return mixed
 
 
+def open_bra_asset(kind: str, width: int = 980) -> Image.Image:
+    image = Image.open(OPEN_BRA_PATH).convert("RGB")
+    white = Image.new("RGB", image.size, "white")
+    difference = ImageChops.difference(image, white).convert("L")
+    alpha = difference.point(lambda value: 0 if value < 7 else min(255, value * 5))
+    image = image.convert("RGBA")
+    image.putalpha(alpha)
+    bbox = alpha.getbbox()
+    if bbox:
+        image = image.crop(bbox)
+
+    overlay = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(overlay)
+    w, h = image.size
+    if kind == "wing":
+        left_wing = [
+            (0, int(h * 0.57)),
+            (int(w * 0.07), int(h * 0.57)),
+            (int(w * 0.25), int(h * 0.36)),
+            (int(w * 0.27), int(h * 0.88)),
+            (int(w * 0.07), int(h * 0.88)),
+            (0, int(h * 0.85)),
+        ]
+        right_wing = [(w - x, y) for x, y in left_wing]
+        od.polygon(left_wing, fill=(255, 116, 120, 100))
+        od.polygon(right_wing, fill=(255, 116, 120, 100))
+    elif kind == "sidebone":
+        bone_width = max(14, int(w * 0.012))
+        for x_ratio in (0.245, 0.755):
+            cx = int(w * x_ratio)
+            od.rounded_rectangle(
+                (cx - bone_width, int(h * 0.40), cx + bone_width, int(h * 0.85)),
+                radius=bone_width,
+                fill=CORAL,
+                outline=DARK,
+                width=4,
+            )
+
+    overlay.putalpha(ImageChops.multiply(overlay.getchannel("A"), image.getchannel("A")))
+    image.alpha_composite(overlay)
+    image.thumbnail((width, 650), Image.Resampling.LANCZOS)
+    return image
+
+
 def draw_bra_and_bunny(base: Image.Image, kind: str):
     draw = ImageDraw.Draw(base)
     bunny = Image.open(CUPBUNNY / "설명.png").convert("RGBA")
 
     if kind in {"wing", "sidebone"}:
-        # Complete front bra with wide side wings and a visible hook end.
-        left_wing = [(310, 770), (92, 725), (72, 975), (345, 1030)]
-        right_wing = [(770, 770), (990, 725), (1010, 975), (735, 1030)]
-        draw.polygon(left_wing, fill="#F3D2C3", outline=DARK)
-        draw.polygon(right_wing, fill="#F3D2C3", outline=DARK)
-        # Clearly separated hook-and-eye ends: hooks on the left, eyes on the right.
-        draw.rectangle((72, 760, 112, 940), fill="#E7BDAA", outline=DARK, width=4)
-        draw.rectangle((968, 760, 1010, 940), fill="#E7BDAA", outline=DARK, width=4)
-        for hy in (790, 850, 910):
-            draw.arc((76, hy - 10, 108, hy + 12), 70, 290, fill=DARK, width=4)
-            draw.ellipse((980, hy - 9, 998, hy + 9), outline=DARK, width=4)
-
-        full_bra = bra_asset(660)
-        paste_contain(base, full_bra, (210, 500, 880, 1160))
-
-        if kind == "wing":
-            overlay = Image.new("RGBA", base.size, (0, 0, 0, 0))
-            od = ImageDraw.Draw(overlay)
-            od.polygon(left_wing, fill=(255, 116, 120, 105))
-            od.polygon(right_wing, fill=(255, 116, 120, 105))
-            base.alpha_composite(overlay)
-            draw = ImageDraw.Draw(base)
-            draw.line((175, 650, 190, 745), fill=CORAL, width=7)
-            draw.polygon([(190, 745), (171, 715), (203, 711)], fill=CORAL)
-            draw.line((905, 650, 890, 745), fill=CORAL, width=7)
-            draw.polygon([(890, 745), (877, 710), (909, 716)], fill=CORAL)
-        else:
-            draw.rounded_rectangle((785, 765, 827, 1000), radius=16, fill=CORAL, outline=DARK, width=5)
-            draw.line((806, 690, 806, 748), fill=CORAL, width=7)
-            draw.polygon([(806, 748), (790, 716), (822, 716)], fill=CORAL)
-        paste_contain(base, bunny, (20, 1030, 300, 1360))
+        full_bra = open_bra_asset(kind)
+        paste_contain(base, full_bra, (45, 555, 1035, 1195))
+        paste_contain(base, bunny, (25, 1035, 285, 1360))
         return
 
     paste_contain(base, bunny, (25, 820, 335, 1300))
@@ -219,17 +235,9 @@ def draw_bra_and_bunny(base: Image.Image, kind: str):
         bra = tint_asset(bra, (255, 218, 221), 0.33)
         pattern = Image.new("RGBA", bra.size, (0, 0, 0, 0))
         pd = ImageDraw.Draw(pattern)
-        # Sparse floral lace cue. It is clipped to the bra silhouette below.
-        for py in range(210, bra.height - 80, 70):
-            for px in range(70 + (py // 70 % 2) * 35, bra.width - 50, 80):
-                petal = 9
-                for dx, dy in ((-10, 0), (10, 0), (0, -10), (0, 10)):
-                    pd.ellipse(
-                        (px + dx - petal, py + dy - petal, px + dx + petal, py + dy + petal),
-                        outline=(255, 116, 120, 125),
-                        width=3,
-                    )
-                pd.ellipse((px - 5, py - 5, px + 5, py + 5), fill=(255, 116, 120, 100))
+        for offset in range(-bra.height, bra.width + bra.height, 42):
+            pd.line((offset, bra.height, offset + bra.height, 0), fill=(255, 116, 120, 120), width=3)
+            pd.line((offset, 0, offset + bra.height, bra.height), fill=(255, 116, 120, 90), width=3)
         clipped_alpha = ImageChops.multiply(pattern.getchannel("A"), bra.getchannel("A"))
         pattern.putalpha(clipped_alpha)
         bra.alpha_composite(pattern)
@@ -415,6 +423,8 @@ def write_metadata():
             "몰드컵/재단컵/홑겹은 예시를 표기",
             "중심고어/옆날개/사이드본은 위치를 표기",
             "각 용어에 큰컵 POINT 한 줄 표기",
+            "홑겹 컷은 사용자 요청에 따라 이전 격자 표현으로 복원",
+            "옆날개/사이드본은 실제 비율의 후크를 푼 펼친 브라 원본 사용",
             "마지막 컷은 저장 CTA와 하트만 사용",
             "이미지 검수 후 릴스 제작",
         ],
@@ -429,6 +439,8 @@ def write_metadata():
 - 1080×1920 PNG 8장
 - 순서: 표지 / 몰드컵 / 재단컵 / 홑겹 / 중심고어 / 옆날개 / 사이드본 / 저장 CTA
 - 모든 용어 컷에 뜻, 예시 또는 위치, 큰컵 포인트 포함
+- 홑겹 컷은 이전 격자 표현으로 복원
+- 옆날개·사이드본은 실제 비율의 후크를 푼 펼친 브라 이미지 사용
 - 마지막 컷 팔로우 문구 제거, `저장하고`와 하트 적용
 - 릴스 미제작: 사용자 이미지 검수 대기
 """
