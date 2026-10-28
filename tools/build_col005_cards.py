@@ -58,6 +58,7 @@ CARDS_DATA = [
         "definition": "패드 없이 원단만으로 만든 컵",
         "meta": "예: 레이스 홑겹 브라, 메시 홑겹 브라",
         "point": "볼륨을 더하지 않아 가볍지만\n원단과 절개선의 지지력을 함께 봐야 해요",
+        "detail": "레이스·메시 원단 자체가\n컵 모양을 만들어요",
         "footnote": "참고: 재단컵이면서 홑겹일 수도 있어요",
     },
     {
@@ -75,6 +76,7 @@ CARDS_DATA = [
         "definition": "컵 옆에서 등까지 감싸는 부분",
         "meta": "위치: 컵 옆에서 등 후크까지",
         "point": "넓고 탄탄한 옆날개는 가슴의 무게를\n몸통으로 나누는 데 도움을 줘요",
+        "diagram_note": "후크를 풀어 좌우로 펼친 모습",
     },
     {
         "file": "07_사이드본.png",
@@ -83,6 +85,7 @@ CARDS_DATA = [
         "definition": "옆날개 안의 세로 지지대",
         "meta": "위치: 겨드랑이 아래 옆날개 안쪽",
         "point": "옆날개가 접히거나 말리지 않게\n잡아주는 역할이 중요해요",
+        "diagram_note": "후크를 풀어 좌우로 펼친 모습",
     },
     {
         "file": "08_저장CTA.png",
@@ -181,8 +184,12 @@ def draw_bra_and_bunny(base: Image.Image, kind: str):
         right_wing = [(770, 770), (990, 725), (1010, 975), (735, 1030)]
         draw.polygon(left_wing, fill="#F3D2C3", outline=DARK)
         draw.polygon(right_wing, fill="#F3D2C3", outline=DARK)
-        for hy in (785, 850, 915):
-            draw.ellipse((982, hy - 9, 1000, hy + 9), outline=DARK, width=4)
+        # Clearly separated hook-and-eye ends: hooks on the left, eyes on the right.
+        draw.rectangle((72, 760, 112, 940), fill="#E7BDAA", outline=DARK, width=4)
+        draw.rectangle((968, 760, 1010, 940), fill="#E7BDAA", outline=DARK, width=4)
+        for hy in (790, 850, 910):
+            draw.arc((76, hy - 10, 108, hy + 12), 70, 290, fill=DARK, width=4)
+            draw.ellipse((980, hy - 9, 998, hy + 9), outline=DARK, width=4)
 
         full_bra = bra_asset(660)
         paste_contain(base, full_bra, (210, 500, 880, 1160))
@@ -212,9 +219,17 @@ def draw_bra_and_bunny(base: Image.Image, kind: str):
         bra = tint_asset(bra, (255, 218, 221), 0.33)
         pattern = Image.new("RGBA", bra.size, (0, 0, 0, 0))
         pd = ImageDraw.Draw(pattern)
-        for offset in range(-bra.height, bra.width + bra.height, 42):
-            pd.line((offset, bra.height, offset + bra.height, 0), fill=(255, 116, 120, 120), width=3)
-            pd.line((offset, 0, offset + bra.height, bra.height), fill=(255, 116, 120, 90), width=3)
+        # Sparse floral lace cue. It is clipped to the bra silhouette below.
+        for py in range(210, bra.height - 80, 70):
+            for px in range(70 + (py // 70 % 2) * 35, bra.width - 50, 80):
+                petal = 9
+                for dx, dy in ((-10, 0), (10, 0), (0, -10), (0, 10)):
+                    pd.ellipse(
+                        (px + dx - petal, py + dy - petal, px + dx + petal, py + dy + petal),
+                        outline=(255, 116, 120, 125),
+                        width=3,
+                    )
+                pd.ellipse((px - 5, py - 5, px + 5, py + 5), fill=(255, 116, 120, 100))
         clipped_alpha = ImageChops.multiply(pattern.getchannel("A"), bra.getchannel("A"))
         pattern.putalpha(clipped_alpha)
         bra.alpha_composite(pattern)
@@ -300,6 +315,11 @@ def draw_term_text(image: Image.Image, item: dict):
     mx = (WIDTH - mw) / 2
     draw.rounded_rectangle((mx - 28, 292, mx + mw + 28, 292 + mh + 28), radius=22, fill=PALE_PINK)
     draw.text((mx, 302), meta, font=mf, fill=DARK)
+
+    if item.get("detail"):
+        draw_centered(draw, item["detail"], 382, 35, color=GRAY, max_width=870, spacing=6)
+    elif item.get("diagram_note"):
+        draw_centered(draw, item["diagram_note"], 400, 34, color=GRAY, max_width=850)
 
     point_box = (65, 1390, 1015, 1745)
     draw.rounded_rectangle(point_box, radius=36, fill=PALE_PINK, outline=CORAL, width=5)
