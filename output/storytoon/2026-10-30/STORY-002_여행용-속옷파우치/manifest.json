@@ -4,6 +4,7 @@
   "date": "2026-10-30",
   "status": "image_review",
   "reel_created": false,
+  "text_baked_in": false,
   "format": {
     "width": 1080,
     "height": 1920,
