@@ -1,0 +1,20 @@
+{
+  "id": "STORY-002",
+  "title": "여행용 속옷 파우치",
+  "date": "2026-10-30",
+  "status": "image_review",
+  "reel_created": false,
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "cards": 5
+  },
+  "cards": [
+    "02_cards/01_표지.png",
+    "02_cards/02_여행준비.png",
+    "02_cards/03_하나만넣어도.png",
+    "02_cards/04_꾸겨넣기.png",
+    "02_cards/05_사연모집.png"
+  ],
+  "review": "05_review/STORY-002_전체검수.jpg"
+}
